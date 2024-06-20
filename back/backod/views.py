@@ -5,8 +5,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 
-
-
 from ultralytics import YOLO
 
 # Create your views here.
@@ -46,12 +44,10 @@ def detect_objects(request):
 
     results_Dict = dict()
     for (i, classification) in enumerate(results[0].boxes.cls.cpu().numpy()):
-        results_Dict[results[0].names[classification]] = results[0].boxes.conf.cpu().numpy()[i]
+        results_Dict[results[0].names[classification]] = str(results[0].boxes.conf.cpu().numpy()[i]) #stringify everything lol
 
 
     results[0].save(os.path.join(os.path.dirname(img_path), 'lol.jpg'))
-
-
 
     return JsonResponse(results_Dict)
 
