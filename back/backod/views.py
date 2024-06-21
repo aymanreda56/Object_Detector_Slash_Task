@@ -36,18 +36,18 @@ def detect_objects(request):
 
     results = model.predict(source=img_path, device='cpu', conf=0.2, iou=0.8) #inference
 
-
+    result_obj = results[0]
 
     # print(results[0].boxes)
-    list_of_names = [ results[0].names[(results[0].boxes.cls.cpu().numpy()[i])] for i in range(len(results[0].boxes.cls)) ]
+    list_of_names = [ result_obj.names[(result_obj.boxes.cls.cpu().numpy()[i])] for i in range(len(result_obj.boxes.cls)) ]
 
 
     results_Dict = dict()
-    for (i, classification) in enumerate(results[0].boxes.cls.cpu().numpy()):
-        results_Dict[results[0].names[classification]] = str(results[0].boxes.conf.cpu().numpy()[i]) #stringify everything lol
+    for (i, classification) in enumerate(result_obj.boxes.cls.cpu().numpy()):
+        results_Dict[result_obj.names[classification]] = str(result_obj.boxes.conf.cpu().numpy()[i]) #stringify everything lol
 
 
-    results[0].save(os.path.join(os.path.dirname(img_path), 'lol.jpg'))
+    result_obj.save(os.path.join(os.path.dirname(img_path), 'lol.jpg'))
 
     return JsonResponse(results_Dict)
 
